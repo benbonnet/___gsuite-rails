@@ -5,7 +5,7 @@ Cloudtasker.configure do |config|
   if Rails.env.production?
     config.processor_host = "https://#{Env.fetch('DOMAIN')}"
   else
-    config.processor_host = "http://web:3000"
+    config.processor_host = "http://localhost:3000"
   end
 
   #
