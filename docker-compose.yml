@@ -1,0 +1,49 @@
+version: "3.8"
+x-mutagen:
+  sync:
+    defaults:
+      ignore:
+        vcs: true
+      mode: "two-way-resolved"
+    mount-code:
+      alpha: "."
+      beta: "volume://mount-code"
+x-app-volumes: &volumes
+  volumes:
+    - mount-code:/app
+    - gem_cache:/app/.bundle
+x-rails: &rails
+  restart: always
+  image: app
+  build:
+    context: .
+    dockerfile: Dockerfile
+    target: build-env
+  networks:
+    - backend
+  tty: true
+  stdin_open: true
+services:
+  web:
+    <<: *volumes
+    <<: *rails
+    command: bundle exec bin/rails s -p 3000 -b '0.0.0.0'
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: development
+    depends_on:
+      - cloudtasker
+  cloudtasker:
+    <<: *volumes
+    <<: *rails
+    command: bundle exec cloudtasker
+    environment:
+      RAILS_ENV: development
+# Our network declarations, used in
+networks:
+  backend:
+    driver: bridge
+volumes:
+  gem_cache:
+  mount-code:

@@ -1,0 +1,1 @@
+mutagen-compose up --remove-orphans web
