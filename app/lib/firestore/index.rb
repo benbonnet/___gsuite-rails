@@ -1,3 +1,5 @@
+require 'google/cloud/firestore'
+
 module Firestore
   # Firestore::Index.new('users').process
   class Index
@@ -11,10 +13,16 @@ module Firestore
     end
 
     def process
-      collection.get.map(&:data)
+      chain_where.get.map do |rec|
+        { id: rec.document_id }.merge(rec.data)
+      end
     end
 
     private
+
+    def chain_where
+      where.inject(collection) { |acc, values| acc.where(*values) }
+    end
 
     def collection
       @collection ||= client.col(collection_path)

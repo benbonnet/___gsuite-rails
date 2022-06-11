@@ -1,24 +1,6 @@
-# README
+## Firebase doc
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Querying : https://firebase.google.com/docs/firestore/query-data/queries
+Querying coumpounded : https://firebase.google.com/docs/firestore/query-data/queries#compound_queries
+Add data : https://firebase.google.com/docs/firestore/manage-data/add-data
+Delete data : https://firebase.google.com/docs/firestore/manage-data/delete-data
