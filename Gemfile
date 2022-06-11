@@ -14,6 +14,7 @@ gem 'omniauth-google-oauth2'
 gem 'cloudtasker'
 gem "amazing_print"
 gem "rails_semantic_logger"
+gem "google-cloud-firestore"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"

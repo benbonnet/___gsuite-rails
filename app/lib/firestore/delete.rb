@@ -1,9 +1,7 @@
-module Store
-	module Firestore
-	  class Delete < ::Store::Firestore::Base
-	    def process
-	      index.delete_document(id)
-	    end
-	  end
-	end
+module Firestore
+  class Delete < Firestore::Base
+    def process
+      client.index.delete_document(id)
+    end
+  end
 end
