@@ -10,6 +10,7 @@ gem "rails", "~> 7.0.3"
 gem "puma", "~> 5.0"
 
 gem 'omniauth'
+gem "omniauth-rails_csrf_protection"
 gem 'omniauth-google-oauth2'
 gem 'cloudtasker'
 gem "amazing_print"

@@ -1,6 +1,10 @@
 class ApplicationController < ActionController::API
   def index
-    DummyWorker.perform_async('foo')
-    render(json: "/layouts/placeholder_view")
+    render(json: {ok: :cool})
+  end
+
+  def create_session
+    user = User.from_omniauth(request.env['omniauth.auth'])
+    render(json: user)
   end
 end

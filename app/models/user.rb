@@ -1,19 +1,20 @@
 class User < Firestore::Model
+  # User.from_omniauth(OpenStruct.new(provider: :google_oauth2, credentials: { token: SecureRandom.uuid }))
   def self.from_omniauth(auth)
-    # record = where(oauth_provider: auth.provider, oauth_uid: auth.uid).or(
-    #   where(email: auth.info.email)
-    # ).first_or_initialize
+    
+    payload = {
+      oauth_provider: auth.provider,
+      email: auth.info.email,
+      oauth_token: auth.credentials.token,
+      oauth_id_token: auth.extra.id_token,
+      oauth_picture: auth.info.image,
+      oauth_name: auth.extra.raw_info.name,
+      oauth_uid: auth.uid
+    }
 
-    # record.email          = auth.info.email
-    # record.oauth_token    = auth.credentials.token
-    # record.oauth_id_token = auth.extra.id_token
-    # record.oauth_provider = auth.provider
-    # record.oauth_picture  = auth.info.image
-    # record.oauth_name     = auth.extra.raw_info.name
-    # record.oauth_uid      = auth.uid
-    # record.password       = Devise.friendly_token[0,20]
-    # record.save!
-    # record
+    record = find_by(oauth_provider: auth.provider, oauth_uid: auth.uid)
+    
+    record ? record.save(**payload) : create(**payload)
   end
 
   attributes(
@@ -25,7 +26,6 @@ class User < Firestore::Model
       oauth_picture
       oauth_name
       oauth_uid
-      password
     ]
   )
 end

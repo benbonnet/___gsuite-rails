@@ -16,45 +16,35 @@ module Firestore
       end
     end
 
-    # def self.find_by(**args)
-    #   all.select { }
-    # end
+    def self.find_by(**args)
+      make_where = args.map { |k, v| [k, '==', v] }
+      all(make_where).first
+    end
 
     def self.find(id)
       data = ::Firestore::Show.new(self.name.downcase, id).process
-      self.new(**data)
+      self.new(**data).show
     end
 
     def self.create(**payload)
-      raise(StandardError.new("Invalid field in use")) if (payload.keys - allowed_attributes).length >= 1
+      if (payload.keys - allowed_attributes).length >= 1
+        diff = payload.keys - allowed_attributes
+        raise(StandardError.new("Invalid attr(s) : #{diff.to_sentence})"))
+      end
       data = ::Firestore::Create.new(self.name.downcase, payload).process
-      self.new(**data)
+      self.new(**data).show
     end
 
-    # def self.belongs_to(klass)
-    #   define_singleton_method(key.to_sym) do
-    #     value
-    #   end
-    # end
-
-    # def self.has_many(klass)
-    #   define_singleton_method(klass.pluralize.to_sym) do
-    #     klass.capitalize.constantize.all
-    #   end
-    # end
-
-    # def self.has_one(klass)
-    #   define_singleton_method(klass.to_sym) do
-    #     klass.capitalize.constantize.find("#{self.class.name.underscore}_id")
-    #   end
-    # end
-
-    attr_reader(:class_name, :initial_data)
+    attr_reader(:class_name, :initial_data, :data)
 
     def initialize(**data)
       @class_name = self.class.name.downcase
       @initial_data = data
-      define_attributes!(data)
+      @data = define_attributes!(data)
+    end
+
+    def show
+      data
     end
 
     def save(payload)
