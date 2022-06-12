@@ -15,4 +15,17 @@ class User < Firestore::Model
     # record.save!
     # record
   end
+
+  attributes(
+    %i[
+      email
+      oauth_token
+      oauth_id_token
+      oauth_provider
+      oauth_picture
+      oauth_name
+      oauth_uid
+      password
+    ]
+  )
 end

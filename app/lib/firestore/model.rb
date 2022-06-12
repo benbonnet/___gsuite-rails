@@ -1,7 +1,17 @@
 module Firestore
   class Model
-    def self.all
-      ::Firestore::Index.new(self.name.downcase).process.map do |node|
+    def self.attributes(fields)
+      define_singleton_method(:allowed_attributes) do
+        fields
+      end
+
+      define_method(:allowed_attributes) do
+        fields + [:id]
+      end
+    end
+
+    def self.all(where = [])
+      ::Firestore::Index.new(self.name.downcase, where: where).process.map do |node|
         self.new(**node)
       end
     end
@@ -16,6 +26,7 @@ module Firestore
     end
 
     def self.create(**payload)
+      raise(StandardError.new("Invalid field in use")) if (payload.keys - allowed_attributes).length >= 1
       data = ::Firestore::Create.new(self.name.downcase, payload).process
       self.new(**data)
     end
@@ -38,27 +49,36 @@ module Firestore
     #   end
     # end
 
-    attr_reader(:class_name)
+    attr_reader(:class_name, :initial_data)
 
     def initialize(**data)
       @class_name = self.class.name.downcase
-      data.each do |key, value|
-        define_singleton_method(key.to_sym) do
-          value
-        end
-      end
+      @initial_data = data
+      define_attributes!(data)
     end
 
     def save(payload)
-      ::Firestore::Update.new(
-        class_name,
-        id,
-        payload
-      ).process
+      raise(StandardError.new("Invalid field in use")) if (payload.keys - allowed_attributes).length >= 1
+      data = ::Firestore::Update.new(class_name, id, payload).process
+      define_attributes!(data)
     end
 
     def destroy
       ::Firestore::Delete.new(class_name, id).process
+    end
+
+    private
+
+    def define_attributes!(data)
+      data.each do |key, value|
+        if allowed_attributes.include?(key)
+          define_singleton_method(key.to_sym) do
+            value
+          end
+        else
+          raise(StandardError("#{key} is unallowed"))
+        end
+      end
     end
   end
 end
