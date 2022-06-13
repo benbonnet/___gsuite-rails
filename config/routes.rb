@@ -4,6 +4,6 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
   root("application#index")
-  get('/auth/google_oauth2/callback', to: 'application#create_session')
+  match('/auth/google_oauth2/callback', to: 'application#create_session', via: %i[get post])
   match('*path' => 'application#index', via: :get)
 end
