@@ -1,0 +1,19 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/deedotmx/gsuite-rails', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/deedotmx/gsuite-rails']
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    - 'run'
+    - 'deploy'
+    - 'gsuite-rails'
+    - '--image'
+    - 'gcr.io/deedotmx/gsuite-rails'
+    - '--region'
+    - 'europe-west1'
+    - '--update-secrets=RAILS_MASTER_KEY=rails-master-key:latest'
+    - '--update-secrets=SECRET_KEY_BASE=rails-master-key:latest'
+images:
+- gcr.io/deedotmx/gsuite-rails

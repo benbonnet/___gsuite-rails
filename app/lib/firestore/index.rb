@@ -1,5 +1,3 @@
-require 'google/cloud/firestore'
-
 module Firestore
   # Firestore::Index.new('users').process
   class Index
@@ -25,11 +23,7 @@ module Firestore
     end
 
     def collection
-      @collection ||= client.col(collection_path)
-    end
-
-    def client
-      @client ||= ::Google::Cloud::Firestore.new(project_id: "koinsdotapp")
+      @collection ||= FIRESTORE_CLIENT.col(collection_path)
     end
   end
 end

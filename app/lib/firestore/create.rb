@@ -27,7 +27,7 @@ module Firestore
     end
 
     def client
-      @client ||= ::Google::Cloud::Firestore.new(project_id: "koinsdotapp")
+      @client ||= ::Google::Cloud::Firestore.new
     end
   end
 end

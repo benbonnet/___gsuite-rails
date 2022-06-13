@@ -3,7 +3,7 @@ Cloudtasker.configure do |config|
   # Adapt the server port to be the one used by your Rails web process
   #
   if Rails.env.production?
-    config.processor_host = "https://#{Env.fetch('DOMAIN')}"
+    config.processor_host = "https://#{ENV.fetch('DOMAIN', 'dee.mx')}"
   else
     config.processor_host = "http://localhost:3000"
   end
