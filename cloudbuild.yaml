@@ -15,5 +15,6 @@ steps:
     - 'europe-west1'
     - '--update-secrets=RAILS_MASTER_KEY=rails-master-key:latest'
     - '--update-secrets=SECRET_KEY_BASE=rails-master-key:latest'
+    - '--allow-unauthenticated'
 images:
 - gcr.io/deedotmx/gsuite-rails
